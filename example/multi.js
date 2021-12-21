@@ -13,4 +13,4 @@ var B = [
     [[7.5,4],[8.889,1.778],[10,4]],
   ],
 ]
-console.log(eq(A,B))
+console.log(eq(A,B)) // true
