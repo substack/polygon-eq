@@ -1,0 +1,12 @@
+{
+  "name": "polygon-eq",
+  "version": "1.0.0",
+  "description": "compare if two polygons are equal. multipolygons and holes supported",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "devDependencies": {
+    "tape": "^5.3.2"
+  },
+  "license": "bsd"
+}
