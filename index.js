@@ -69,16 +69,24 @@ function cmpRings(A, B, epsilon) {
   return true
 }
 
-function cmpRing(A, B, epsilon) {
-  if (A.length !== B.length) return false
-  for (var bstart = 0; bstart < B.length; bstart++) {
-    if (!cmp(A[0], B[bstart], epsilon)) continue
-    for (var i = 1; i < A.length; i++) {
-      if (!cmp(A[i], B[(bstart+i)%B.length], epsilon)) break
+function cmpRing(A, B, e) {
+  var ainit = A.length > 1 && cmp(A[0],A[A.length-1],e) ? 1 : 0
+  var binit = B.length > 1 && cmp(B[0],B[B.length-1],e) ? 1 : 0
+  if (A.length-ainit !== B.length-binit) return false
+  for (var bstart = binit; bstart < B.length; bstart++) {
+    if (!cmp(A[ainit], B[bstart], e)) continue
+    var ib = bstart
+    for (var i = 1+ainit; i < A.length; i++) {
+      ib = (ib+1)%B.length
+      if (ib < binit) ib++
+      if (!cmp(A[i], B[ib], e)) break
     }
     if (i === A.length) return true
-    for (var i = 1; i < A.length; i++) {
-      if (!cmp(A[i], B[(bstart+B.length-i)%B.length], epsilon)) break
+    ib = bstart
+    for (var i = 1+ainit; i < A.length; i++) {
+      ib = (ib+B.length-1)%B.length
+      if (ib < binit) ib = B.length-1
+      if (!cmp(A[i], B[ib], e)) break
     }
     if (i === A.length) return true
   }
