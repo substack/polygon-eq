@@ -43,7 +43,7 @@ function cmpMRings(A, B, epsilon) {
     }
     if (j === B.length) return false
   }
-  for (var j = 1; j < B.length; j++) {
+  for (var j = 0; j < B.length; j++) {
     if (!bmatch[j]) return false
   }
   return true
