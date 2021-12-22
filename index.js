@@ -32,41 +32,77 @@ module.exports = function cmpPolygon(A, B, epsilon) {
 
 function cmpMRings(A, B, epsilon) {
   if (A.length !== B.length) return false
-  var bmatch = {}
-  for (var i = 0; i < A.length; i++) {
-    for (var j = 0; j < B.length; j++) {
-      if (bmatch[j]) continue
-      if (cmpRings(A[i],B[j],epsilon)) {
-        bmatch[j] = true
-        break
+  if (A.length <= 32) { // bitfield version
+    var bf = 0
+    for (var i = 0; i < A.length; i++) {
+      for (var j = 0; j < B.length; j++) {
+        if (((bf>>j)&1) === 1) continue
+        if (cmpRings(A[i],B[j],epsilon)) {
+          bf |= (1<<j)
+          break
+        }
       }
+      if (j === B.length) return false
     }
-    if (j === B.length) return false
+    for (var j = 0; j < B.length; j++) {
+      if (((bf>>j)&1) !== 1) return false
+    }
+    return true
+  } else { // object version
+    var bmatch = {}
+    for (var i = 0; i < A.length; i++) {
+      for (var j = 0; j < B.length; j++) {
+        if (bmatch[j]) continue
+        if (cmpRings(A[i],B[j],epsilon)) {
+          bmatch[j] = true
+          break
+        }
+      }
+      if (j === B.length) return false
+    }
+    for (var j = 0; j < B.length; j++) {
+      if (!bmatch[j]) return false
+    }
+    return true
   }
-  for (var j = 0; j < B.length; j++) {
-    if (!bmatch[j]) return false
-  }
-  return true
 }
 
 function cmpRings(A, B, epsilon) {
   if (A.length !== B.length) return false
   if (!cmpRing(A[0],B[0],epsilon)) return false
-  var bmatch = {}
-  for (var i = 1; i < A.length; i++) {
-    for (var j = 1; j < B.length; j++) {
-      if (bmatch[j]) continue
-      if (cmpRing(A[i],B[j],epsilon)) {
-        bmatch[j] = true
-        break
+  if (A.length-1 <= 32) { // bitfield version
+    var bf = 0
+    for (var i = 1; i < A.length; i++) {
+      for (var j = 1; j < B.length; j++) {
+        if (((bf>>j)&1) === 1) continue
+        if (cmpRing(A[i],B[j],epsilon)) {
+          bf |= (1<<j)
+          break
+        }
       }
+      if (j === B.length) return false
     }
-    if (j === B.length) return false
+    for (var j = 1; j < B.length; j++) {
+      if (((bf>>j)&1) !== 1) return false
+    }
+    return true
+  } else { // object version
+    var bmatch = {}
+    for (var i = 1; i < A.length; i++) {
+      for (var j = 1; j < B.length; j++) {
+        if (bmatch[j]) continue
+        if (cmpRing(A[i],B[j],epsilon)) {
+          bmatch[j] = true
+          break
+        }
+      }
+      if (j === B.length) return false
+    }
+    for (var j = 1; j < B.length; j++) {
+      if (!bmatch[j]) return false
+    }
+    return true
   }
-  for (var j = 1; j < B.length; j++) {
-    if (!bmatch[j]) return false
-  }
-  return true
 }
 
 function cmpRing(A, B, e) {
