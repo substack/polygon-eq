@@ -1,5 +1,6 @@
 module.exports = function cmpPolygon(A, B, epsilon) {
   if (epsilon === undefined) epsilon = 1e-8
+  if (A.length === 0 && B.length === 0) return true
   var dA = getDepth(A), dB = getDepth(B)
   if (dA === 2 && dB === 2) {
     return cmpRing(A,B,epsilon)

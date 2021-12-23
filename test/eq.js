@@ -1,6 +1,12 @@
 var test = require('tape')
 var eq = require('../')
 
+test('empty', function (t) {
+  t.ok(eq([],[]))
+  t.notOk(eq([],[[1,2]]))
+  t.end()
+})
+
 test('{A,B,C}2', function (t) {
   var A = [ [ 6.25, 6 ], [ 10, 12 ], [ 10, 4 ], [ 7.5, 4 ], [ 10, 0 ], [ 0, 0 ], [ 5, 8 ] ]
   var B = [ [ 6.25, 6 ], [ 5, 8 ], [ 0, 0 ], [ 10, 0 ], [ 7.5, 4 ], [ 10, 4 ], [ 10, 12 ] ]
